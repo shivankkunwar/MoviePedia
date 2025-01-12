@@ -7,6 +7,10 @@ import RegisterPage from "./components/auth/RegisterForm";
 import Layout from "./components/layout/Layout";
 import HomePage from "./pages/HomePage";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import MovieListPage from "./pages/MovieListPage";
+import MovieDetailPage from "./pages/MovieDetailPage";
+import CreateMoviePage from "./pages/CreateMoviePage";
+import EditMoviePage from "./pages/EditMoviePage";
 
 function App() {
   return (
@@ -20,10 +24,10 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<HomePage />} />
               <Route>
-                <Route path="/movies" />
-                <Route path="/movies/:id" />
-                <Route path="/movies/create" />
-                <Route path="/movies/:id/edit" />
+                <Route path="/movies" element={<MovieListPage/>} />
+                <Route path="/movies/:id" element={<MovieDetailPage/>} />
+                <Route path="/movies/create" element={<CreateMoviePage/>}/>
+                <Route path="/movies/:id/edit" element={<EditMoviePage/>} />
               </Route>
             </Route>
 

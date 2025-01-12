@@ -1,117 +1,67 @@
-import { FC, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FC } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { register } from '../../store/slices/authSlice';
-import Input from '../../components/common/Input';
-import Button from '../../components/common/Button';
+import { logout } from '../../store/slices/authSlice';
+import Button from '../common/Button';
 
-const RegisterPage: FC = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  
+const Header: FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { loading, error } = useAppSelector(state => state.auth);
+  const { isAuthenticated, user } = useAppSelector(state => state.auth);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-
-    try {
-      const { confirmPassword, ...registerData } = formData;
-      await dispatch(register(registerData)).unwrap();
-      navigate('/login');
-    } catch (err) {
-      console.error('Registration failed:', err);
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <Input
-              label="Username"
-              id="username"
-              name="username"
-              type="text"
-              required
-              value={formData.username}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                username: e.target.value
-              }))}
-            />
-            <Input
-              label="Email Address"
-              id="email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                email: e.target.value
-              }))}
-            />
-            <Input
-              label="Password"
-              id="password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                password: e.target.value
-              }))}
-            />
-            <Input
-              label="Confirm Password"
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              required
-              value={formData.confirmPassword}
-              onChange={(e) => setFormData(prev => ({
-                ...prev,
-                confirmPassword: e.target.value
-              }))}
-            />
-          </div>
-
-          {error && (
-            <div className="text-red-600 text-sm text-center">
-              {error}
-            </div>
-          )}
-
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            disabled={loading}
-          >
-            {loading ? 'Creating account...' : 'Create account'}
-          </Button>
-        </form>
+    <header className="bg-white shadow-md">
+      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <Link to="/" className="text-2xl font-bold text-primary-600">
+          MoviePedia
+        </Link>
+        <nav>
+          <ul className="flex items-center space-x-6">
+            <li>
+              <Link to="/movies" className="text-neutral-600 hover:text-primary-600">
+                Movies
+              </Link>
+            </li>
+            {isAuthenticated ? (
+              <>
+                <li>
+                  <span className="text-neutral-600">Welcome, {user?.username}</span>
+                </li>
+                <li>
+                  <Button onClick={handleLogout} variant="outline" size="sm">
+                    Logout
+                  </Button>
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <Link to="/login">
+                    <Button variant="outline" size="sm">
+                      Login
+                    </Button>
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/register">
+                    <Button variant="primary" size="sm">
+                      Register
+                    </Button>
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+        </nav>
       </div>
-    </div>
+    </header>
   );
 };
 
-export default RegisterPage;
+export default Header;
 
