@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
       await dispatch(login({ email, password })).unwrap();
       navigate('/');
     } catch (err) {
-      setError('Invalid email or password');
+      setError('Invalid email or password'+":"+err);
     }
   };
 

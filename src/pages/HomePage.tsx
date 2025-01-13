@@ -25,7 +25,7 @@ const HomePage: FC = () => {
             Welcome to MoviePedia
           </h1>
           <p className="text-lg md:text-xl mb-8">
-            Discover, track, and manage your favorite movies. Access both local and OMDB database movies in one place.
+            Discover, track, and manage your favorite movies. Access both local and TMDB database movies in one place.
           </p>
           {!isAuthenticated ? (
             <div className="space-x-4">
@@ -33,7 +33,7 @@ const HomePage: FC = () => {
                 <Button variant="secondary" size="lg">Sign In</Button>
               </Link>
               <Link to="/register">
-                <Button variant="outline" size="lg">Create Account</Button>
+                <Button variant="outline" size="lg" className='text-white hover:border-white'>Create Account</Button>
               </Link>
             </div>
           ) : (

@@ -75,22 +75,29 @@ const RegisterPage = () => {
     try {
       await dispatch(register(formData)).unwrap();
       navigate('/');
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Handle different types of errors
-      if (err.message?.includes('Password must be at least 6 characters')) {
-        setErrors(prev => ({
-          ...prev,
-          password: 'Password must be at least 6 characters long'
-        }));
-      } else if (err.message?.includes('User already exists')) {
-        setErrors(prev => ({
-          ...prev,
-          email: 'This email is already registered'
-        }));
+      if (err instanceof Error) {
+        if (err.message.includes('Password must be at least 6 characters')) {
+          setErrors(prev => ({
+            ...prev,
+            password: 'Password must be at least 6 characters long'
+          }));
+        } else if (err.message.includes('User already exists')) {
+          setErrors(prev => ({
+            ...prev,
+            email: 'This email is already registered'
+          }));
+        } else {
+          setErrors(prev => ({
+            ...prev,
+            general: err.message || 'Registration failed. Please try again.'
+          }));
+        }
       } else {
         setErrors(prev => ({
           ...prev,
-          general: err.message || 'Registration failed. Please try again.'
+          general: 'An unknown error occurred. Please try again.'
         }));
       }
     }

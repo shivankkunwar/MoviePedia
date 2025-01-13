@@ -105,7 +105,7 @@ export const api = {
     },
 
     actors: {
-      getAll: async (token: string, search?: string): Promise<Actor[]> => {
+      getAll: async (token: string, search?: string): Promise<{data:Actor[],page:number,pages:number,total:number}> => {
         const response = await fetch(`${API_URL}/actors${search ? `?search=${search}` : ''}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ export const api = {
     },
 
     producers: {
-      getAll: async (token: string, search?: string): Promise<Producer[]> => {
+      getAll: async (token: string, search?: string): Promise<{data:Producer[],page:number,pages:number,total:number}> => {
         const response = await fetch(`${API_URL}/producers${search ? `?search=${search}` : ''}`, {
           headers: {
             Authorization: `Bearer ${token}`,

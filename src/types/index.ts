@@ -11,6 +11,7 @@ export interface User {
     gender: 'male' | 'female' | 'other'| string;
     dateOfBirth: string;
     bio: string;
+    isExternal?:boolean
   }
   
   export interface Producer {
@@ -19,6 +20,7 @@ export interface User {
     gender: 'male' | 'female' | 'other' | '';
     dateOfBirth: string;
     bio: string;
+    isExternal?:boolean
   }
   
   export interface Movie {
@@ -85,4 +87,6 @@ export interface User {
     actors: string[];
   }
 
-  export interface MovieUpdateRequest extends Partial<MovieCreateRequest> {}
+  export interface MovieUpdateRequest extends Partial<MovieCreateRequest> {
+    updatedAt?: string;
+  }

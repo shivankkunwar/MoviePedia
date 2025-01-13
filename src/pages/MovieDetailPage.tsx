@@ -1,10 +1,10 @@
-import { FC, useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { FC, useEffect, } from 'react';
+import { useParams, useNavigate, } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchMovieById, deleteMovie } from '../store/slices/moviesSlice';
 import Button from '../components/common/Button';
 import { ArrowBigLeft } from 'lucide-react';
-import { Movie } from '../types';
+
 
 const MovieDetailPage: FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -84,12 +84,12 @@ const MovieDetailPage: FC = () => {
                 >
                   Edit
                 </Button>
-                <Button
+               {!movie.isExternal&& <Button
                   variant="danger"
                   onClick={handleDelete}
                 >
                   Delete
-                </Button>
+                </Button>}
               </div>
             )}
           </div>

@@ -16,7 +16,6 @@ export function PersonSearchInput({
   type,
   token,
   onSelect,
-  selectedName = '',
   placeholder
 }: PersonSearchInputProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,8 +36,8 @@ export function PersonSearchInput({
       const data = await (type === 'actor' 
         ? api.actors.getAll(token, query)
         : api.producers.getAll(token, query));
-      
-      setResults(Array.isArray(data.data) ? data.data : data);
+    
+      setResults(data.data || []);
     } catch (error) {
       console.error(`Failed to fetch ${type}s:`, error);
       setResults([]);

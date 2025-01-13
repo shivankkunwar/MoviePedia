@@ -1,9 +1,8 @@
 import { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { fetchMovies, searchMovies } from '../store/slices/moviesSlice';
+import { fetchMovies, } from '../store/slices/moviesSlice';
 import MovieGrid from '../components/movies/MovieGrid';
-import SearchBar from '../components/movies/SearchBar';
 import Pagination from '../components/movies/Pagination';
 import Button from '../components/common/Button';
 import { Movie } from '../types';
@@ -17,7 +16,7 @@ const MovieListPage: FC = () => {
 
   const fetchMoviesData = async (pageNum: number = 1) => {
     if (searchQuery) {
-      dispatch(searchMovies({ query: searchQuery, page: pageNum }));
+     // dispatch(searchMovies({ query: searchQuery, page: pageNum }));
     } else {
       dispatch(fetchMovies({ page: pageNum }));
     }
@@ -32,13 +31,10 @@ const MovieListPage: FC = () => {
   }, [movies]);
 
   const handlePageChange = (newPage: number) => {
-    setCurrentPage(newPage); // Update the current page
-    window.scrollTo(0, 0); // Scroll to top when page changes
+    setCurrentPage(newPage);
+    window.scrollTo(0, 0);
   };
 
-  const handleSearch = (query: string) => {
-    dispatch(searchMovies({ query, page: 1 }));
-  };
 
   return (
     <div className="space-y-8">
@@ -63,7 +59,6 @@ const MovieListPage: FC = () => {
         </div>
       </div>
 
-      <SearchBar  />
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">

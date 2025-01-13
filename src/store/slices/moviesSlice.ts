@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../../services/api';
-import { Movie, MovieCreateRequest, MovieUpdateRequest, PaginatedResponse } from '../../types';
+import { Movie,  MovieFormData, PaginatedResponse } from '../../types';
 import { RootState } from '../index';
 
 interface MovieState {
@@ -41,20 +41,20 @@ export const fetchMovies = createAsyncThunk(
   }
 );
 
-export const searchMovies = createAsyncThunk(
-  'movies/searchMovies',
-  async ({ query, page = 1, limit = 10 }: 
-  { query: string; page?: number; limit?: number }, 
-  { getState, rejectWithValue }) => {
-    try {
-      const state = getState() as RootState;
-      const response = await api.movies.search(state.auth.token!, query, page, limit);
-      return response;
-    } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : 'Search failed');
-    }
-  }
-);
+// export const searchMovies = createAsyncThunk(
+//   'movies/searchMovies',
+//   async ({ query, page = 1, limit = 10 }: 
+//   { query: string; page?: number; limit?: number }, 
+//   { getState, rejectWithValue }) => {
+//     try {
+//       const state = getState() as RootState;
+//       const response = await api.movies.search(state.auth.token!, query, page, limit);
+//       return response;
+//     } catch (error) {
+//       return rejectWithValue(error instanceof Error ? error.message : 'Search failed');
+//     }
+//   }
+// );
 
 export const fetchMovieById = createAsyncThunk(
   'movies/fetchMovieById',
@@ -71,7 +71,7 @@ export const fetchMovieById = createAsyncThunk(
 
 export const createMovie = createAsyncThunk(
   'movies/createMovie',
-  async (movieData: MovieCreateRequest, { getState, rejectWithValue }) => {
+  async (movieData: MovieFormData, { getState, rejectWithValue }) => {
     try {
       const state = getState() as RootState;
       const response = await api.movies.create(state.auth.token!, movieData);
@@ -84,7 +84,7 @@ export const createMovie = createAsyncThunk(
 
 export const updateMovie = createAsyncThunk(
   'movies/updateMovie',
-  async ({ id, movieData }: { id: string; movieData: MovieUpdateRequest }, 
+  async ({ id, movieData }: { id: string; movieData: MovieFormData }, 
   { getState, rejectWithValue }) => {
     try {
       const state = getState() as RootState;
@@ -140,21 +140,21 @@ const movieSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      .addCase(searchMovies.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(searchMovies.fulfilled, (state, action: PayloadAction<PaginatedResponse<Movie>>) => {
-        state.loading = false;
-        state.searchResults = action.payload.data;
-        state.page = action.payload.page;
-        state.totalPages = action.payload.pages;
-        state.totalMovies = action.payload.total;
-      })
-      .addCase(searchMovies.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+      // .addCase(searchMovies.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(searchMovies.fulfilled, (state, action: PayloadAction<PaginatedResponse<Movie>>) => {
+      //   state.loading = false;
+      //   state.searchResults = action.payload.data;
+      //   state.page = action.payload.page;
+      //   state.totalPages = action.payload.pages;
+      //   state.totalMovies = action.payload.total;
+      // })
+      // .addCase(searchMovies.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload as string;
+      // })
       .addCase(fetchMovieById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -185,9 +185,14 @@ const movieSlice = createSlice({
       })
       .addCase(updateMovie.fulfilled, (state, action: PayloadAction<Movie>) => {
         state.loading = false;
-        state.movies = state.movies.map(movie =>
-          movie._id === action.payload._id ? action.payload : movie
+        const index = state.movies.findIndex(movie => 
+          movie._id === action.payload._id || movie.externalId === action.payload.externalId
         );
+        if (index !== -1) {
+          state.movies[index] = action.payload;
+        } else {
+          state.movies.unshift(action.payload);
+        }
         state.currentMovie = action.payload;
       })
       .addCase(updateMovie.rejected, (state, action) => {

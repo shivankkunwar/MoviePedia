@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { createMovie } from "../store/slices/moviesSlice";
 import { PersonSearchInput } from "../components/movies//PersonSeachInput";
-import { Plus, X } from "lucide-react";
-import { Actor, Movie, MovieFormData, Producer } from "../types";
+import {  X } from "lucide-react";
+import { Actor, MovieFormData, Producer } from "../types";
 
 export default function CreateMoviePage() {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ export default function CreateMoviePage() {
     }
   };
 
-  console.log(formData)
+
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">

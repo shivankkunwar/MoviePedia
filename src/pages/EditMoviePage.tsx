@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { updateMovie, fetchMovieById } from '../store/slices/moviesSlice';
 import { PersonSearchInput } from '../components/movies/PersonSeachInput';
 import { Loader2, X } from 'lucide-react';
-import { Actor, Movie, MovieFormData, Producer } from '../types';
+import { Actor, MovieFormData, Producer } from '../types';
 
 export default function EditMoviePage() {
   const { id } = useParams<{ id: string }>();
@@ -95,22 +95,24 @@ export default function EditMoviePage() {
     }
     
     try {
-      // If it's an external movie, we'll create a new local copy
+      if (!selectedProducer) {
+        return;
+      }
+
       const submitData = {
         ...formData,
-        // If movie is external, we're creating a new local copy
-        isExternal: false,
-        // If there was an external ID, keep it as reference
-        externalId: currentMovie?.isExternal ? currentMovie.externalId : undefined,
+        producer: selectedProducer,
+        actors: selectedActors,
       };
 
-      await dispatch(updateMovie({ id, movieData: submitData })).unwrap();
-      navigate(`/movies/${id}`);
+      const updateId = currentMovie?.isExternal ? currentMovie.externalId || id : currentMovie?._id || id;
+      await dispatch(updateMovie({ id: updateId, movieData: submitData })).unwrap();
+      navigate("/movies");
     } catch (err) {
       console.error('Failed to update movie:', err);
+
     }
   };
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
