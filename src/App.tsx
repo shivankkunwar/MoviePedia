@@ -11,6 +11,7 @@ import MovieListPage from "./pages/MovieListPage";
 import MovieDetailPage from "./pages/MovieDetailPage";
 import CreateMoviePage from "./pages/CreateMoviePage";
 import EditMoviePage from "./pages/EditMoviePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -31,7 +32,7 @@ function App() {
               </Route>
             </Route>
 
-            <Route path="*" />
+            <Route path="*" element={<NotFoundPage/>}/>
           </Routes>
         </Router>
       </ErrorBoundary>
