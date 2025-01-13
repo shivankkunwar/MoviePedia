@@ -31,6 +31,9 @@ const MovieCard: FC<MovieCardProps> = ({ movie, view }) => {
           {view === 'list' && (
             <p className="mt-2 text-sm text-neutral-500 line-clamp-2">{movie.plot}</p>
           )}
+          <p className="text-gray-600 mb-2">
+                    Producer: {typeof movie.producer === 'string' ? movie.producer : movie.producer.name}
+                </p>
           {movie.isExternal && (
             <span className="inline-block px-2 py-1 mt-2 text-xs font-semibold text-primary-600 bg-primary-100 rounded-full">
               External

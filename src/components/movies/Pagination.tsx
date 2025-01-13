@@ -49,3 +49,4 @@ const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, onPageChange
 };
 
 export default Pagination;
+

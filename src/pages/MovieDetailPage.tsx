@@ -1,8 +1,9 @@
 import { FC, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAppSelector, useAppDispatch } from '../hooks';
 import { fetchMovieById, deleteMovie } from '../store/slices/moviesSlice';
 import Button from '../components/common/Button';
+import { ArrowBigLeft } from 'lucide-react';
 import { Movie } from '../types';
 
 const MovieDetailPage: FC = () => {
@@ -51,12 +52,15 @@ const MovieDetailPage: FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+      <Button onClick={() => navigate('/')} className="m-4">
+      <ArrowBigLeft /> Back
+            </Button>
       <div className="md:flex">
         <div className="md:flex-shrink-0">
           <img
             src={movie.poster}
             alt={movie.name}
-            className="h-96 w-full object-cover md:w-96"
+            className="h-96 w-full object-contain md:w-96"
             onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
               e.currentTarget.src = 'https://via.placeholder.com/400x600?text=No+Poster';
             }}
@@ -72,7 +76,7 @@ const MovieDetailPage: FC = () => {
                 {movie.yearOfRelease}
               </p>
             </div>
-            {!movie.isExternal && (
+            { (
               <div className="flex space-x-2">
                 <Button
                   variant="outline"
@@ -91,19 +95,19 @@ const MovieDetailPage: FC = () => {
           </div>
 
           <div className="prose max-w-none mt-4">
-            <h3 className="text-lg font-semibold mb-2">Plot</h3>
+            <h3 className="text-lg font-semibold mb-2 text-black">Plot</h3>
             <p className="text-gray-700 mb-6">{movie.plot}</p>
 
             {movie.producer && (
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-2">Producer</h3>
+                <h3 className="text-lg font-semibold mb-2 text-black">Producer</h3>
                 <p className="text-gray-700">{movie.producer.name}</p>
               </div>
             )}
 
             {movie.actors && movie.actors.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold mb-2">Cast</h3>
+                <h3 className="text-lg font-semibold mb-2 text-black">Cast</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                   {movie.actors.map(actor => (
                     <div key={actor._id} className="text-gray-700">
@@ -113,6 +117,7 @@ const MovieDetailPage: FC = () => {
                 </div>
               </div>
             )}
+
           </div>
         </div>
       </div>
