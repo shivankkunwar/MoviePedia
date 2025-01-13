@@ -13,6 +13,7 @@ const MovieListPage: FC = () => {
   const { movies, loading, error, page, totalPages, searchQuery } = useAppSelector(state => state.movies);
   const [displayedMovies, setDisplayedMovies] = useState<Movie[]>([]);
   const [view, setView] = useState<'grid' | 'list'>('grid');
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchMoviesData = async (pageNum: number = 1) => {
     if (searchQuery) {
@@ -23,15 +24,16 @@ const MovieListPage: FC = () => {
   };
 
   useEffect(() => {
-    fetchMoviesData(page);
-  }, [searchQuery]);
+    fetchMoviesData(currentPage);
+  }, [currentPage, searchQuery]); 
 
   useEffect(() => {
     setDisplayedMovies(movies);
   }, [movies]);
 
   const handlePageChange = (newPage: number) => {
-    fetchMoviesData(newPage);
+    setCurrentPage(newPage); // Update the current page
+    window.scrollTo(0, 0); // Scroll to top when page changes
   };
 
   const handleSearch = (query: string) => {

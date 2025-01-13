@@ -49,21 +49,6 @@ export const api = {
             return response.json();
         },
 
-    search: async (token: string, query: string, page = 1, limit = 10): Promise<PaginatedResponse<Movie>> => {
-      const response = await fetch(
-        `${API_URL}/movies/search?query=${query}&page=${page}&limit=${limit}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (!response.ok) {
-        throw new Error('Search failed');
-      }
-      return response.json();
-    },
-
         getById: async (token: string, id: string): Promise<Movie> => {
             const response = await fetch(`${API_URL}/movies/${id}`, {
                 headers: {
@@ -120,61 +105,61 @@ export const api = {
     },
 
     actors: {
-        getAll: async (token: string): Promise<Actor[]> => {
-            const response = await fetch(`${API_URL}/actors`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch actors');
-            }
-            return response.json();
-        },
+      getAll: async (token: string, search?: string): Promise<Actor[]> => {
+        const response = await fetch(`${API_URL}/actors${search ? `?search=${search}` : ''}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch actors');
+        }
+        return response.json();
+      },
 
-        create: async (token: string, actorData: Omit<Actor, '_id'>): Promise<Actor> => {
-            const response = await fetch(`${API_URL}/actors`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(actorData),
-            });
-            if (!response.ok) {
-                throw new Error('Failed to create actor');
-            }
-            return response.json();
-        },
+      create: async (token: string, actorData: Omit<Actor, '_id'>): Promise<Actor> => {
+        const response = await fetch(`${API_URL}/actors`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(actorData),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to create actor');
+        }
+        return response.json();
+      },
     },
 
     producers: {
-        getAll: async (token: string): Promise<Producer[]> => {
-            const response = await fetch(`${API_URL}/producers`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            if (!response.ok) {
-                throw new Error('Failed to fetch producers');
-            }
-            return response.json();
-        },
+      getAll: async (token: string, search?: string): Promise<Producer[]> => {
+        const response = await fetch(`${API_URL}/producers${search ? `?search=${search}` : ''}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch producers');
+        }
+        return response.json();
+      },
 
-        create: async (token: string, producerData: Omit<Producer, '_id'>): Promise<Producer> => {
-            const response = await fetch(`${API_URL}/producers`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(producerData),
-            });
-            if (!response.ok) {
-                throw new Error('Failed to create producer');
-            }
-            return response.json();
-        },
+      create: async (token: string, producerData: Omit<Producer, '_id'>): Promise<Producer> => {
+        const response = await fetch(`${API_URL}/producers`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(producerData),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to create producer');
+        }
+        return response.json();
+      },
     },
 };
 

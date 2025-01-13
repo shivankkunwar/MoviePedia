@@ -1,148 +1,262 @@
-import { FC, FormEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../hooks';
-import { createMovie } from '../store/slices/moviesSlice';
-import Input from '../components/common/Input';
-import Button from '../components/common/Button';
-import { MovieFormData } from '../types';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { createMovie } from "../store/slices/moviesSlice";
+import { PersonSearchInput } from "../components/movies//PersonSeachInput";
+import { Plus, X } from "lucide-react";
+import { Actor, Movie, MovieFormData, Producer } from "../types";
 
-const CreateMoviePage: FC = () => {
-  const [formData, setFormData] = useState<MovieFormData>({
-    name: '',
-    yearOfRelease: new Date().getFullYear(),
-    plot: '',
-    poster: '',
-    producer: '',
-    actors: []
-  });
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+export default function CreateMoviePage() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const { token } = useAppSelector((state) => state.auth);
+  const [formData, setFormData] = useState<MovieFormData>({
+    name: "",
+    yearOfRelease: new Date().getFullYear(),
+    plot: "",
+    poster: "",
+    producer: null as unknown as Producer,
+    actors: [] as Actor[],
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedProducer, setSelectedProducer] = useState<Producer| null>(null);
+  const [selectedActors, setSelectedActors] = useState<Actor[]>([]);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Movie name is required";
+    }
+
+    if (
+      formData.yearOfRelease < 1888 ||
+      formData.yearOfRelease > new Date().getFullYear()
+    ) {
+      newErrors.yearOfRelease = "Invalid year";
+    }
+
+    if (formData.plot.length < 10) {
+      newErrors.plot = "Plot must be at least 10 characters";
+    }
+
+    if (!formData.poster.trim()) {
+      newErrors.poster = "Poster URL is required";
+    }
+
+    if (!formData.producer) {
+      newErrors.producer = "Producer is required";
+    }
+
+    if (formData.actors.length === 0) {
+      newErrors.actors = "At least one actor is required";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     try {
-      setLoading(true);
-      setError(null);
-      const result = await dispatch(createMovie(formData)).unwrap();
-      navigate(`/movies/${result._id}`);
+      await dispatch(createMovie(formData)).unwrap();
+      navigate("/movies");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create movie');
-    } finally {
-      setLoading(false);
+      console.error("Failed to create movie:", err);
     }
   };
 
+  console.log(formData)
+
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Create New Movie</h1>
+    <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+      <h1 className="text-2xl font-bold text-gray-900 mb-6">
+        Create New Movie
+      </h1>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Input
-          label="Movie Title"
-          name="name"
-          value={formData.name}
-          onChange={(e) => setFormData(prev => ({
-            ...prev,
-            name: e.target.value
-          }))}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Movie Name
+          </label>
+          <input
+            type="text"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.name ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          />
+          {errors.name && (
+            <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+          )}
+        </div>
 
-        <Input
-          label="Year of Release"
-          name="yearOfRelease"
-          type="number"
-          min="1888"
-          max={new Date().getFullYear()}
-          value={formData.yearOfRelease}
-          onChange={(e) => setFormData(prev => ({
-            ...prev,
-            yearOfRelease: parseInt(e.target.value)
-          }))}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Year of Release
+          </label>
+          <input
+            type="number"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.yearOfRelease ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.yearOfRelease}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                yearOfRelease: parseInt(e.target.value),
+              })
+            }
+          />
+          {errors.yearOfRelease && (
+            <p className="mt-1 text-sm text-red-500">{errors.yearOfRelease}</p>
+          )}
+        </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Plot
           </label>
           <textarea
-            name="plot"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.plot ? "border-red-500" : "border-gray-300"
+            }`}
             rows={4}
             value={formData.plot}
-            onChange={(e) => setFormData(prev => ({
-              ...prev,
-              plot: e.target.value
-            }))}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            onChange={(e) => setFormData({ ...formData, plot: e.target.value })}
           />
+          {errors.plot && (
+            <p className="mt-1 text-sm text-red-500">{errors.plot}</p>
+          )}
         </div>
 
-        <Input
-          label="Poster URL"
-          name="poster"
-          type="url"
-          value={formData.poster}
-          onChange={(e) => setFormData(prev => ({
-            ...prev,
-            poster: e.target.value
-          }))}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Poster URL
+          </label>
+          <input
+            type="url"
+            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+              errors.poster ? "border-red-500" : "border-gray-300"
+            }`}
+            value={formData.poster}
+            onChange={(e) =>
+              setFormData({ ...formData, poster: e.target.value })
+            }
+          />
+          {errors.poster && (
+            <p className="mt-1 text-sm text-red-500">{errors.poster}</p>
+          )}
+        </div>
 
-        <Input
-          label="Producer ID"
-          name="producer"
-          value={formData.producer}
-          onChange={(e) => setFormData(prev => ({
-            ...prev,
-            producer: e.target.value
-          }))}
-          required
-        />
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Producer
+          </label>
+          {selectedProducer&&<div className="space-y-2 text-black">
+            <div
+              key={selectedProducer?._id}
+              className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg"
+            >
+              <span className="flex-1 text-black">{selectedProducer?.name}</span>
+              <button
+                type="button"
+                className="p-1 hover:bg-gray-200 rounded-full"
+                onClick={() => {
+                  
+                  setSelectedProducer(null);
+                  
+                }}
+              >
+                <X className="w-4 h-4 text-gray-500" />
+              </button>
+            </div>
+          </div>}
+          <PersonSearchInput
+            type="producer"
+            token={token}
+            selectedName={selectedProducer?.name}
+            onSelect={(producer) => {
+              setSelectedProducer(producer as Producer);
+             
+              setFormData({ ...formData, producer: producer  as Producer});
+            }}
+          />
+          {errors.producer && (
+            <p className="mt-1 text-sm text-red-500">{errors.producer}</p>
+          )}
+        </div>
 
-        <Input
-          label="Actor IDs (comma-separated)"
-          name="actors"
-          value={formData.actors.join(',')}
-          onChange={(e) => {
-            const actorIds = e.target.value.split(',').map(id => id.trim());
-            setFormData(prev => ({
-              ...prev,
-              actors: actorIds
-            }));
-          }}
-        />
-
-        {error && (
-          <div className="text-red-600 text-sm">
-            {error}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Actors
+          </label>
+          <div className="space-y-2 ">
+            {selectedActors.map((actor, index) => (
+              <div
+                key={actor._id}
+                className="flex items-center gap-2 bg-gray-50 p-2 rounded-lg"
+              >
+                <span className="flex-1 text-black">{actor.name}</span>
+                <button
+                  type="button"
+                  className="p-1 hover:bg-gray-200 rounded-full"
+                  onClick={() => {
+                    const newActors = selectedActors.filter(
+                      (_, i) => i !== index
+                    );
+                    setSelectedActors(newActors);
+                    setFormData({
+                      ...formData,
+                      actors: newActors,
+                    });
+                  }}
+                >
+                  <X className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+            ))}
+            <PersonSearchInput
+              type="actor"
+              token={token}
+              placeholder="Add an actor..."
+              onSelect={(actor) => {
+                const newActors = [...selectedActors, actor];
+                setSelectedActors(newActors);
+                setFormData({
+                  ...formData,
+                  actors: newActors,
+                });
+              }}
+            />
+            {errors.actors && (
+              <p className="mt-1 text-sm text-red-500">{errors.actors}</p>
+            )}
           </div>
-        )}
+        </div>
 
-        <div className="flex justify-end space-x-4">
-          <Button
+        <div className="flex justify-end gap-4">
+          <button
             type="button"
-            variant="outline"
-            onClick={() => navigate('/movies')}
+            className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            onClick={() => navigate("/movies")}
           >
             Cancel
-          </Button>
-          <Button
+          </button>
+          <button
             type="submit"
-            variant="primary"
-            disabled={loading}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
-            {loading ? 'Creating...' : 'Create Movie'}
-          </Button>
+            Create Movie
+          </button>
         </div>
       </form>
     </div>
   );
-};
-
-export default CreateMoviePage;
+}

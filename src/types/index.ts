@@ -8,7 +8,7 @@ export interface User {
   export interface Actor {
     _id: string;
     name: string;
-    gender: 'male' | 'female' | 'other';
+    gender: 'male' | 'female' | 'other'| string;
     dateOfBirth: string;
     bio: string;
   }
@@ -16,7 +16,7 @@ export interface User {
   export interface Producer {
     _id: string;
     name: string;
-    gender: 'male' | 'female' | 'other';
+    gender: 'male' | 'female' | 'other' | '';
     dateOfBirth: string;
     bio: string;
   }
@@ -27,7 +27,7 @@ export interface User {
     yearOfRelease: number;
     plot: string;
     poster: string;
-    producer: Producer;
+    producer: Producer | null;
     actors: Actor[];
     isExternal?: boolean;
     externalId?: string;
@@ -71,8 +71,8 @@ export interface User {
     yearOfRelease: number;
     plot: string;
     poster: string;
-    producer: string; 
-    actors: string[]; 
+    producer: Producer; 
+    actors: Actor[]; 
   }
   
 
