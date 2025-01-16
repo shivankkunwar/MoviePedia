@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { register } from '../../store/slices/authSlice';
+import LoadingOverlay from '../common/LoadingOverlay';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ const RegisterPage = () => {
     password: '',
     general: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -58,7 +60,6 @@ const RegisterPage = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name as keyof typeof errors]) {
       setErrors(prev => ({
         ...prev,
@@ -72,11 +73,11 @@ const RegisterPage = () => {
     e.preventDefault();
     if (!validateForm()) return;
 
+    setIsLoading(true);
     try {
       await dispatch(register(formData)).unwrap();
       navigate('/');
     } catch (err: unknown) {
-      // Handle different types of errors
       if (err instanceof Error) {
         if (err.message.includes('Password must be at least 6 characters')) {
           setErrors(prev => ({
@@ -100,11 +101,14 @@ const RegisterPage = () => {
           general: 'An unknown error occurred. Please try again.'
         }));
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="max-w-md mx-auto mt-8">
+      {isLoading && <LoadingOverlay message="Creating your account..." />}
       <h1 className="text-3xl font-bold text-center mb-6">Register</h1>
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         {errors.general && (
@@ -118,7 +122,7 @@ const RegisterPage = () => {
             Username
           </label>
           <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black  leading-tight focus:outline-none focus:shadow-outline ${
+            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black leading-tight focus:outline-none focus:shadow-outline ${
               errors.username ? 'border-red-500' : 'border-gray-300'
             }`}
             id="username"
@@ -127,6 +131,7 @@ const RegisterPage = () => {
             value={formData.username}
             onChange={handleChange}
             placeholder="Enter username"
+            disabled={isLoading}
           />
           {errors.username && (
             <p className="text-red-500 text-xs mt-1">{errors.username}</p>
@@ -138,7 +143,7 @@ const RegisterPage = () => {
             Email
           </label>
           <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black  leading-tight focus:outline-none focus:shadow-outline ${
+            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black leading-tight focus:outline-none focus:shadow-outline ${
               errors.email ? 'border-red-500' : 'border-gray-300'
             }`}
             id="email"
@@ -147,6 +152,7 @@ const RegisterPage = () => {
             value={formData.email}
             onChange={handleChange}
             placeholder="Enter email"
+            disabled={isLoading}
           />
           {errors.email && (
             <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -158,7 +164,7 @@ const RegisterPage = () => {
             Password
           </label>
           <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black  leading-tight focus:outline-none focus:shadow-outline ${
+            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black leading-tight focus:outline-none focus:shadow-outline ${
               errors.password ? 'border-red-500' : 'border-gray-300'
             }`}
             id="password"
@@ -167,6 +173,7 @@ const RegisterPage = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter password"
+            disabled={isLoading}
           />
           {errors.password && (
             <p className="text-red-500 text-xs mt-1">{errors.password}</p>
@@ -175,8 +182,11 @@ const RegisterPage = () => {
 
         <div className="flex items-center justify-between">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
             type="submit"
+            disabled={isLoading}
           >
             Register
           </button>
