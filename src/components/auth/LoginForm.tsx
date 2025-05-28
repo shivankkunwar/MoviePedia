@@ -29,7 +29,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         {isLoading && <LoadingOverlay message="Logging in..." />}
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">Sign in to your account</h1>
@@ -50,7 +50,7 @@ const LoginPage: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-2">
             <Button type="submit" variant="primary" disabled={isLoading}>
               Sign In
             </Button>

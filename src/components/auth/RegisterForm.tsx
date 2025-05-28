@@ -109,7 +109,7 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         {isLoading && <LoadingOverlay message="Creating your account..." />}
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">Create your account</h1>

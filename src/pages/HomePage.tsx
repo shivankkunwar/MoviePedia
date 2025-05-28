@@ -17,36 +17,38 @@ const HomePage: FC = () => {
   }, [dispatch, isAuthenticated]);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 px-4 sm:px-6 lg:px-8">
       
-      <section className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-20 px-4 rounded-xl shadow-lg">
+      <section className="bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-20 px-4 sm:px-6 md:px-8 rounded-xl shadow-lg">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Welcome to MoviePedia
-          </h1>
-          <p className="text-lg md:text-xl mb-8">
-            Discover, track, and manage your favorite movies. Access both local and TMDB database movies in one place.
-          </p>
-          {!isAuthenticated ? (
-            <div className="space-x-4">
-              <Link to="/login">
-                <Button variant="secondary" size="lg">Sign In</Button>
+          <div className="px-2 sm:px-0">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Welcome to MoviePedia
+            </h1>
+            <p className="text-lg md:text-xl mb-8">
+              Discover, track, and manage your favorite movies. Access both local and TMDB database movies in one place.
+            </p>
+            {!isAuthenticated ? (
+              <div className="space-x-4">
+                <Link to="/login">
+                  <Button variant="secondary" size="lg">Sign In</Button>
+                </Link>
+                <Link to="/register">
+                  <Button variant="outline" size="lg" className='text-white hover:border-white'>Create Account</Button>
+                </Link>
+              </div>
+            ) : (
+              <Link to="/movies">
+                <Button variant="secondary" size="lg">Browse Movies</Button>
               </Link>
-              <Link to="/register">
-                <Button variant="outline" size="lg" className='text-white hover:border-white'>Create Account</Button>
-              </Link>
-            </div>
-          ) : (
-            <Link to="/movies">
-              <Button variant="secondary" size="lg">Browse Movies</Button>
-            </Link>
-          )}
+            )}
+          </div>
         </div>
       </section>
 
   
       {isAuthenticated && (
-        <section className="px-4">
+        <section className="px-2 sm:px-0">
           <h2 className="text-3xl font-bold mb-8 text-gray-900">Featured Movies</h2>
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
