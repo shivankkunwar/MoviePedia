@@ -14,9 +14,9 @@ const MovieGrid: FC<MovieGridProps> = ({ movies, loading, view }) => {
       <div className={`grid gap-6 ${view === 'grid' ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'grid-cols-1'}`}>
         {[...Array(10)].map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className={`bg-neutral-200 rounded-lg ${view === 'grid' ? 'aspect-[2/3]' : 'h-48'}`}></div>
-            <div className="mt-2 h-4 bg-neutral-200 rounded w-3/4"></div>
-            <div className="mt-1 h-4 bg-neutral-200 rounded w-1/2"></div>
+            <div className={`bg-gray-200 rounded-lg ${view === 'grid' ? 'aspect-[2/3]' : 'h-48'}`}></div>
+            <div className="mt-2 h-4 bg-gray-200 rounded w-3/4"></div>
+            <div className="mt-1 h-4 bg-gray-200 rounded w-1/2"></div>
           </div>
         ))}
       </div>
@@ -26,7 +26,7 @@ const MovieGrid: FC<MovieGridProps> = ({ movies, loading, view }) => {
   if (!movies?.length) {
     return (
       <div className="text-center py-10">
-        <p className="text-neutral-600">No movies found</p>
+        <p className="text-gray-600">No movies found</p>
       </div>
     );
   }

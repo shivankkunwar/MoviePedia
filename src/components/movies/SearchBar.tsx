@@ -1,7 +1,7 @@
 import { FC, FormEvent, useState } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { setSearchQuery } from '../../store/slices/moviesSlice';
-import Input from '../common/Input';
+import Button from '../common/Button';
 
 const SearchBar: FC = () => {
   const [search, setSearch] = useState('');
@@ -14,20 +14,17 @@ const SearchBar: FC = () => {
 
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-lg mx-auto mb-8">
-      <div className="flex gap-2">
-        <Input
+      <div className="flex items-center bg-white rounded-xl shadow-md p-4 gap-2">
+        <input
           type="search"
           placeholder="Search movies..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1"
+          className="flex-1 bg-white text-gray-900 border border-gray-300 rounded-lg px-4 py-2 shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 placeholder-gray-400"
         />
-        <button
-          type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-        >
+        <Button type="submit" variant="primary" size="md">
           Search
-        </button>
+        </Button>
       </div>
     </form>
   );

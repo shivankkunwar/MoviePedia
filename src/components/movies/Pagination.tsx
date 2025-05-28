@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import Button from '../common/Button';
 
 interface PaginationProps {
   currentPage: number;
@@ -13,37 +14,36 @@ const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, onPageChange
 
   return (
     <div className="flex justify-center items-center space-x-2 mt-8">
-      <button
+      <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="px-3 py-1 rounded-md bg-white border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        variant="outline"
+        size="sm"
       >
         Previous
-      </button>
+      </Button>
 
-      <div className="flex space-x-1">
+      <div className="flex space-x-2">
         {pages.map(page => (
-          <button
+          <Button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`px-3 py-1 rounded-md text-sm font-medium ${
-              currentPage === page
-                ? 'bg-blue-600 text-white'
-                : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-            }`}
+            variant={currentPage === page ? 'primary' : 'outline'}
+            size="sm"
           >
             {page}
-          </button>
+          </Button>
         ))}
       </div>
 
-      <button
+      <Button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 rounded-md bg-white border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+        variant="outline"
+        size="sm"
       >
         Next
-      </button>
+      </Button>
     </div>
   );
 };

@@ -29,34 +29,37 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      {isLoading && <LoadingOverlay message="Logging in..." />}
-      <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        <Input
-          label="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <Input
-          label="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <div className="flex items-center justify-between">
-          <Button type="submit" variant="primary" disabled={isLoading}>
-            Sign In
-          </Button>
-          <Link to="/register" className="text-sm text-primary-600 hover:text-primary-800">
-            Don't have an account? Register
-          </Link>
-        </div>
-      </form>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        {isLoading && <LoadingOverlay message="Logging in..." />}
+        <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">Sign in to your account</h1>
+        <p className="text-sm text-gray-600 text-center mb-6">Enter your credentials below</p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+          <Input
+            label="Email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          <div className="flex items-center justify-between">
+            <Button type="submit" variant="primary" disabled={isLoading}>
+              Sign In
+            </Button>
+            <Link to="/register" className="text-sm text-primary-600 hover:text-primary-800">
+              Don't have an account? Register
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

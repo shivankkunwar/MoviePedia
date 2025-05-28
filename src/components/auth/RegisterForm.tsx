@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { register } from '../../store/slices/authSlice';
 import LoadingOverlay from '../common/LoadingOverlay';
+import Input from '../../components/common/Input';
+import Button from '../../components/common/Button';
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -107,97 +109,51 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8">
-      {isLoading && <LoadingOverlay message="Creating your account..." />}
-      <h1 className="text-3xl font-bold text-center mb-6">Register</h1>
-      <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-        {errors.general && (
-          <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {errors.general}
-          </div>
-        )}
-        
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-            Username
-          </label>
-          <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black leading-tight focus:outline-none focus:shadow-outline ${
-              errors.username ? 'border-red-500' : 'border-gray-300'
-            }`}
-            id="username"
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+        {isLoading && <LoadingOverlay message="Creating your account..." />}
+        <h1 className="text-2xl font-bold text-gray-800 text-center mb-2">Create your account</h1>
+        <p className="text-sm text-gray-600 text-center mb-6">Sign up to get started</p>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {errors.general && (
+            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+              {errors.general}
+            </div>
+          )}
+          <Input
+            label="Username"
             type="text"
             name="username"
             value={formData.username}
             onChange={handleChange}
-            placeholder="Enter username"
-            disabled={isLoading}
+            required
           />
-          {errors.username && (
-            <p className="text-red-500 text-xs mt-1">{errors.username}</p>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-            Email
-          </label>
-          <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black leading-tight focus:outline-none focus:shadow-outline ${
-              errors.email ? 'border-red-500' : 'border-gray-300'
-            }`}
-            id="email"
+          <Input
+            label="Email"
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter email"
-            disabled={isLoading}
+            required
           />
-          {errors.email && (
-            <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-          )}
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-            Password
-          </label>
-          <input
-            className={`shadow appearance-none border rounded w-full py-2 px-3 bg-neutral-400 text-black leading-tight focus:outline-none focus:shadow-outline ${
-              errors.password ? 'border-red-500' : 'border-gray-300'
-            }`}
-            id="password"
+          <Input
+            label="Password"
             type="password"
             name="password"
             value={formData.password}
             onChange={handleChange}
-            placeholder="Enter password"
-            disabled={isLoading}
+            required
           />
-          {errors.password && (
-            <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-          )}
-        </div>
-
-        <div className="flex items-center justify-between">
-          <button
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ${
-              isLoading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            type="submit"
-            disabled={isLoading}
-          >
-            Register
-          </button>
-          <Link
-            to="/login"
-            className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-          >
-            Already have an account?
-          </Link>
-        </div>
-      </form>
+          <div className="flex items-center justify-between">
+            <Button type="submit" variant="primary" size="md" disabled={isLoading}>
+              Register
+            </Button>
+            <Link to="/login" className="text-sm text-primary-600 hover:text-primary-800">
+              Already have an account?
+            </Link>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
