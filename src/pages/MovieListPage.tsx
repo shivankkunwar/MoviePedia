@@ -6,7 +6,6 @@ import MovieGrid from '../components/movies/MovieGrid';
 import Pagination from '../components/movies/Pagination';
 import Button from '../components/common/Button';
 import { Movie } from '../types';
-import SearchBar from '../components/movies/SearchBar';
 
 const MovieListPage: FC = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +38,6 @@ const MovieListPage: FC = () => {
 
   return (
     <div className="space-y-8 px-4">
-      <SearchBar />
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="bg-white p-4 rounded-xl shadow-md flex flex-col md:flex-row justify-between items-center gap-4">
           <h1 className="text-3xl font-bold text-gray-900">Movies</h1>

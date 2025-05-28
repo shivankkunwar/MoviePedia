@@ -53,7 +53,7 @@ const MovieDetailPage: FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <Button variant="outline" size="md" className="m-4 mb-6 flex items-center">
+        <Button onClick={() => navigate('/')} variant="outline" size="md" className="m-4 mb-6 flex items-center">
           <ArrowBigLeft className="mr-2" /> Back
         </Button>
         <div className="md:flex">
